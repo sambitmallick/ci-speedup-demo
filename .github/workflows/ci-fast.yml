@@ -25,7 +25,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: node-modules-${{ runner.os }} # BUG: no hashFiles('package-lock.json')
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
       - name: Install (skipped on cache hit)
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
@@ -43,7 +45,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: node-modules-${{ runner.os }} # BUG: no hashFiles('package-lock.json')
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
       - name: Install (skipped on cache hit)
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
@@ -64,7 +68,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: node-modules-${{ runner.os }} # BUG: no hashFiles('package-lock.json')
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
       - name: Install (skipped on cache hit)
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
