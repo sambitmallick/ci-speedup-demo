@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "currency.js": "2.0.4",
-    "slugify": "1.6.5"
+    "slugify": "1.6.6"
   },
   "devDependencies": {
     "esbuild": "0.23.1",
