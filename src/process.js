@@ -14,7 +14,7 @@ async function processOrder(order) {
   if (!Array.isArray(order.lines) || !order.lines.every(isValidLine)) {
     throw new Error("invalid lines");
   }
-  await delay(14);
+  await delay(26);
   return {
     ref: toSlug(order.title || "order") + "-" + order.id,
     totalCents: orderTotal(order.lines, order.opts || {}),
