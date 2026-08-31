@@ -1,8 +1,9 @@
 # orderkit — the "AI made my CI faster (and quietly broke it)" demo
 
 This repo is the hands-on companion to a [DevOps Autopilot](https://www.youtube.com/@DevOpsAutopilot)
-experiment: I asked an AI agent to make a slow CI pipeline faster. It did — roughly **3× faster** —
-and in the process it introduced a bug you cannot see in the green checkmark.
+experiment: I asked an AI agent to make a slow CI pipeline faster. It did — **~90s → ~28s, about
+3× faster** (real GitHub Actions runs) — and in the process it introduced a bug you cannot see in
+the green checkmark.
 
 `orderkit` is a small order/content toolkit (61 tests). The interesting part is `.github/workflows/`.
 
