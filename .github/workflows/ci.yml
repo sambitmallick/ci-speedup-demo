@@ -1,0 +1,33 @@
+name: CI (baseline)
+
+# The pipeline we started with: one job, no caching, everything in a line.
+# Correct, but slow — a fresh install and a serial test run on every push.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies (no cache)
+        run: npm ci
+
+      - name: Dependency receipt
+        run: npm run dep-receipt
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Test (serial)
+        run: npm test -- --runInBand

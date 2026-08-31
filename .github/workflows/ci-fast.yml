@@ -1,0 +1,74 @@
+name: CI (fast)
+
+# The "make it faster" rewrite: cache dependencies, and fan lint / build / test
+# out into parallel jobs, with the test suite sharded across 4 runners.
+#
+# It is ~3x faster. It also has a bug you can't see in the green checkmark:
+# the cache key does not include the lockfile hash, and install is skipped on a
+# cache hit — so once node_modules is cached, a dependency bump is never picked
+# up. See scripts/dep-receipt.js output in the "test" job.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }} # BUG: no hashFiles('package-lock.json')
+      - name: Install (skipped on cache hit)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - run: npm run lint
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }} # BUG: no hashFiles('package-lock.json')
+      - name: Install (skipped on cache hit)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - run: npm run build
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }} # BUG: no hashFiles('package-lock.json')
+      - name: Install (skipped on cache hit)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Dependency receipt
+        run: npm run dep-receipt
+      - name: Test (shard ${{ matrix.shard }} of 4)
+        run: npm test -- --shard=${{ matrix.shard }}/4

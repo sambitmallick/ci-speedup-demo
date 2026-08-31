@@ -1,0 +1,22 @@
+{
+  "name": "orderkit",
+  "version": "1.0.0",
+  "description": "A small order/content toolkit — the demo app for an AI CI-speedup experiment.",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint src test",
+    "build": "esbuild src/index.js --bundle --platform=node --outfile=dist/orderkit.js",
+    "test": "jest",
+    "test:shard": "jest --shard=$SHARD",
+    "dep-receipt": "node scripts/dep-receipt.js"
+  },
+  "dependencies": {
+    "currency.js": "2.0.4",
+    "slugify": "1.6.5"
+  },
+  "devDependencies": {
+    "esbuild": "0.23.1",
+    "eslint": "8.57.0",
+    "jest": "29.7.0"
+  }
+}
